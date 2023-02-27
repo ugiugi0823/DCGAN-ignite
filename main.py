@@ -4,8 +4,8 @@ import random
 import warnings
 from pathlib import Path
 
-from dataset import *
-from model import *
+from src.dataset import *
+from src.model import *
 from args import define_argparser
 
 
