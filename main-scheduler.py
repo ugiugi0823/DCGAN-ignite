@@ -2,6 +2,7 @@ import argparse
 import os
 import random
 import warnings
+import wandb
 from pathlib import Path
 
 from src.dataset import check_dataset
@@ -32,6 +33,10 @@ except ImportError:
         "Please install torchvision to run this example, for example "
         "via conda by running 'conda install -c pytorch torchvision'. "
     )
+
+
+
+
 
 
 
@@ -174,6 +179,8 @@ def main(
         lr_scheduler_G.step()
         lr_scheduler_D.step()
 
+        # wandb log
+        wandb.log({"errD": errD.item(), "errG": errG.item(), "D_x": D_x, "D_G_z1": D_G_z1, "D_G_z2": D_G_z2})
 
         return {"errD": errD.item(), "errG": errG.item(), "D_x": D_x, "D_G_z1": D_G_z1, "D_G_z2": D_G_z2}
 
@@ -418,6 +425,11 @@ if __name__ == "__main__":
     except FileExistsError:
         if (not args.output_dir.is_dir()) or (len(os.listdir(args.output_dir)) > 0):
             raise FileExistsError("Please provide a path to a non-existing or empty directory.")
+
+    wandb.init(project="DCGAN-cifar-module", entity="hagisilta")
+    wandb.run.name = "DCGAN_20230228_bs-64_epoch-200_lr-2e-4_sch_Mickey"
+    wandb.config.update(args)
+
 
     main(
         dataset=args.dataset,
