@@ -157,6 +157,9 @@ def main(
 
         # gradient update
         optimizerG.step()
+        
+        # wandb log
+        wandb.log({"errD": errD.item(), "errG": errG.item(), "D_x": D_x, "D_G_z1": D_G_z1, "D_G_z2": D_G_z2})
 
         return {"errD": errD.item(), "errG": errG.item(), "D_x": D_x, "D_G_z1": D_G_z1, "D_G_z2": D_G_z2}
 
@@ -386,6 +389,10 @@ if __name__ == "__main__":
     except FileExistsError:
         if (not args.output_dir.is_dir()) or (len(os.listdir(args.output_dir)) > 0):
             raise FileExistsError("Please provide a path to a non-existing or empty directory.")
+            
+    wandb.init(project="DCGAN-cifar-module", entity="hagisilta")
+    wandb.run.name = "DCGAN_20230228_bs-64_epoch-200_lr-2e-4_sch_주현님영어이름"
+    wandb.config.update(args)
 
     main(
         dataset=args.dataset,
