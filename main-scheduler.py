@@ -161,7 +161,7 @@ def main(
         errD = errD_real + errD_fake
         optimizerD.step()
         
-        lr_scheduler_D.step()
+        
 
         # -----------------------------------------------------------
         # (2) Update G network: maximize log(D(G(z)))
@@ -178,7 +178,7 @@ def main(
         optimizerG.step()
 
 
-        lr_scheduler_G.step()
+        
 
 
         # wandb log
@@ -187,6 +187,8 @@ def main(
         return {"errD": errD.item(), "errG": errG.item(), "D_x": D_x, "D_G_z1": D_G_z1, "D_G_z2": D_G_z2}
 
     # ignite objects
+    lr_scheduler_G.step()
+    lr_scheduler_D.step()
     trainer = Engine(step)
     checkpoint_handler = ModelCheckpoint(output_dir, CKPT_PREFIX, n_saved=10, require_empty=False)
     timer = Timer(average=True)
@@ -429,7 +431,7 @@ if __name__ == "__main__":
             raise FileExistsError("Please provide a path to a non-existing or empty directory.")
 
     wandb.init(project="DCGAN-cifar-module", entity="hagisilta")
-    wandb.run.name = "DCGAN_20230228_bs-64_epoch-200_lr-2e-4_sch_Mickey"
+    wandb.run.name = "DCGAN_20230301_bs-64_epoch-200_lr-2e-4_sch_jabal_Mickey"
     wandb.config.update(args)
 
 
