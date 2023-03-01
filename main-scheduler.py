@@ -160,6 +160,8 @@ def main(
         # gradient update
         errD = errD_real + errD_fake
         optimizerD.step()
+        
+        lr_scheduler_D.step()
 
         # -----------------------------------------------------------
         # (2) Update G network: maximize log(D(G(z)))
@@ -177,7 +179,7 @@ def main(
 
 
         lr_scheduler_G.step()
-        lr_scheduler_D.step()
+
 
         # wandb log
         wandb.log({"errD": errD.item(), "errG": errG.item(), "D_x": D_x, "D_G_z1": D_G_z1, "D_G_z2": D_G_z2})
