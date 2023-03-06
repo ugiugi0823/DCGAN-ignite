@@ -50,6 +50,10 @@ def check_dataset(dataset, dataroot):
     elif dataset == "fake":
         dataset = dset.FakeData(size=256, image_size=(3, 64, 64), transform=to_tensor)
         nc = 3
+    
+    elif dataset == "dogs":
+        dataset = dset.ImageFolder(root=dataroot, transform=transforms.Compose([resize, crop, to_tensor, normalize]))
+        nc = 3    
 
     else:
         raise RuntimeError(f"Invalid dataset name: {dataset}")
